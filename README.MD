@@ -1,126 +1,187 @@
-# WEC Telemetry Strategy Dashboard
+# WEC LMP Hypercar Diagnostic Assistant
 
-**Built for:** WEC LMP/Hypercar endurance racing data analysis  
-**Purpose:** Demonstrate data-driven race strategy optimization for 24-hour racing  
-**Status:** v1.0 - Initial build based on engineering principles, iterating with technical references
+**AI-Powered Setup Analysis** • Porsche 963 • WEC / IMSA
+
+Professional trackside diagnostic tool for LMP Hypercar setup optimization.
 
 ## Overview
 
-This project simulates the core data analysis tasks a WEC Data Engineer performs during a 24-hour race:
-- Hybrid energy deployment optimization
-- Tire degradation prediction and stint planning
-- Fuel strategy and pit window calculation
+Real-time setup analysis system that correlates driver feedback, car setup, and track conditions to provide AI-powered recommendations for LMP Hypercars (Porsche 963, Ferrari 499P, Toyota GR010, Cadillac V-Series.R).
 
-Built to demonstrate understanding of endurance racing telemetry for MTS Data Acquisition Technician Course application.
+**Built for:** MTS Data Acquisition Technician Course Application  
+**Target Role:** WEC Data Engineer  
+**Version:** 1.0 - Pre-book baseline, iterating with technical references
 
-## Components
+## Features
 
-### 1. Hybrid Deployment Analyzer (`hybrid_optimizer.py`)
-Simulates MGU-K energy recovery and deployment strategy for LMP Hypercars.
+### Setup Analysis
+- **Ride height sensitivity** (front/rear, aero platform optimization)
+- **Aero balance** (wing angles, diffuser efficiency)
+- **Hybrid deployment strategy** (MGU-K integration with handling)
+- **Brake bias optimization** (weight transfer, hybrid regen interaction)
+- **Tire pressure management** (contact patch, endurance consistency)
 
-**Current features:**
-- Energy recovery zones (braking phases)
-- Deployment zones (corner exit, straights)
-- Battery state-of-charge tracking
-- Lap time impact estimation
+### AI Diagnosis Engine
+- Driver feedback interpretation (understeer, oversteer, instability patterns)
+- Multi-parameter correlation (setup → handling characteristics)
+- Severity scoring and confidence levels
+- Prioritized recommendation list
 
-**Planned improvements** (after reading *Le Mans Prototype Engineering*):
-- Regulatory deployment limits per lap
-- Temperature-based degradation
-- Traffic impact on deployment efficiency
-
-### 2. Tire Degradation Predictor (`tire_strategy.py`)
-Predicts tire wear and optimal stint length based on compound, track temp, and fuel load.
-
-**Current features:**
-- Degradation model based on previous MacGyver toolkit
-- Compound comparison (soft/medium/hard)
-- Track temperature impact
-- Stint length optimization
-
-**Planned improvements:**
-- Contact patch temperature distribution modeling
-- Camber/pressure sensitivity
-- 24-hour consistency vs. peak performance tradeoffs
-
-### 3. Fuel Strategy Calculator (`fuel_optimizer.py`)
-Calculates optimal pit windows and stint lengths for fuel efficiency.
-
-**Current features:**
-- Fuel consumption modeling
-- Pit stop time loss calculation
-- Stint length vs. fuel load tradeoff
-- Safety margin for FCY/code 60
-
-**Planned improvements:**
-- Driver consistency modeling
-- Traffic impact on consumption
-- Multi-car strategy coordination
+### 3D Visualization
+- Interactive Porsche 963 model
+- Heatmap overlay for problem areas (planned)
+- Setup change visualization
 
 ## Tech Stack
 
-- **Python 3.10+**
-- **pandas** - Data manipulation
-- **numpy** - Numerical computation
-- **matplotlib** - Visualization
-- **streamlit** - Dashboard UI (optional)
+**Backend:**
+- Python 3.10+
+- FastAPI (REST API)
+- Pydantic (data validation)
+- NumPy/SciPy (physics calculations)
+
+**Frontend:**
+- React 18
+- Three.js / React Three Fiber (3D model)
+- Tailwind CSS (styling)
+- Vite (build tool)
+
+## Project Structure
+
+```
+wec-lmp-diagnostic/
+├── backend/
+│   ├── main.py                 # FastAPI server
+│   ├── diagnostic_engine.py    # LMP diagnostic logic
+│   ├── models.py               # Pydantic data models
+│   └── requirements.txt
+├── frontend/
+│   ├── src/
+│   │   ├── App.jsx            # Main application
+│   │   ├── components/
+│   │   │   ├── SetupInputs.jsx
+│   │   │   ├── DiagnosisReport.jsx
+│   │   │   └── ModelViewer.jsx
+│   │   └── main.jsx
+│   ├── public/
+│   │   └── porsche_963.glb    # 3D model (you provide)
+│   ├── package.json
+│   └── index.html
+└── README.md
+```
 
 ## Installation
 
+### Backend
 ```bash
-git clone https://github.com/yourusername/wec-telemetry-dashboard.git
-cd wec-telemetry-dashboard
+cd backend
 pip install -r requirements.txt
+uvicorn main:app --reload
 ```
+
+Backend runs on: `http://localhost:8000`
+
+### Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend runs on: `http://localhost:5173`
 
 ## Usage
 
-```bash
-# Run individual modules
-python hybrid_optimizer.py
-python tire_strategy.py
-python fuel_optimizer.py
+1. **Input Setup:** Adjust sliders for current car configuration
+2. **Driver Feedback:** Describe handling issue (understeer/oversteer/instability)
+3. **Track Conditions:** Set ambient temp, fuel load, stint number
+4. **Analyze:** AI generates diagnosis and prioritized recommendations
+5. **Iterate:** Apply changes and re-test
 
-# Run full dashboard (if Streamlit implemented)
-streamlit run dashboard.py
+## Diagnostic Rules (v1.0)
+
+Current implementation uses physics-based heuristics:
+- Ride height → aero balance sensitivity
+- Fuel load → weight distribution changes
+- Hybrid deployment → traction control interaction
+- Tire pressure → contact patch compliance
+
+**Planned improvements** (after reading books):
+- Chapter 2 (Aero): Refined underbody/diffuser sensitivity
+- Chapter 4 (Suspension): Roll center effects, kinematics
+- Chapter 5 (Hybrid): MGU-K deployment impact on balance
+- Chapter 9 (Data): Telemetry correlation patterns
+- Chapter 10 (Performance): Endurance-specific tradeoffs
+
+## API Endpoints
+
+**POST /diagnose**
+```json
+{
+  "setup": {
+    "front_ride_height_mm": 45,
+    "rear_ride_height_mm": 50,
+    "front_wing_angle_deg": 8,
+    "rear_wing_angle_deg": 15,
+    "brake_bias_percent": 52,
+    "hybrid_deployment_map": 1,
+    "tire_pressure": {"fl": 1.8, "fr": 1.8, "rl": 1.9, "rr": 1.9}
+  },
+  "driver_feedback": {
+    "understeer": 0,
+    "oversteer": 0,
+    "brake_stability": 0,
+    "hybrid_feel": 0
+  },
+  "conditions": {
+    "track_temp_c": 35,
+    "fuel_load_kg": 60,
+    "stint_lap": 15
+  }
+}
 ```
 
-## Data Sources
-
-Currently using simulated data based on:
-- Public WEC lap time data
-- Known LMP2/Hypercar performance parameters
-- Engineering estimates from race broadcasts
-
-**Future:** Integrate actual telemetry data when available.
+**Response:**
+```json
+{
+  "diagnosis": {
+    "primary_issue": "mid_corner_understeer",
+    "severity": "medium",
+    "confidence": 0.75
+  },
+  "recommendations": [
+    {
+      "action": "reduce_front_ride_height",
+      "change": "-2mm",
+      "rationale": "Increase front downforce"
+    }
+  ]
+}
+```
 
 ## Development Roadmap
 
-**Phase 1 (Current):** Core algorithms with simulated data  
-**Phase 2 (After reading):** Refinement based on *Le Mans Prototype Engineering* chapters  
-**Phase 3:** Integration with real WEC timing data  
-**Phase 4:** Interactive Streamlit dashboard  
+**Phase 1 (Current):** Physics-based diagnostic rules  
+**Phase 2 (After books):** Refined LMP-specific physics from technical references  
+**Phase 3:** Telemetry data integration (actual sensor streams)  
+**Phase 4:** Machine learning model trained on real setup changes  
+
+## Why This Tool
+
+Demonstrates three critical skills for WEC Data Engineer:
+
+1. **Domain expertise:** Understanding LMP Hypercar setup parameters
+2. **AI/Data skills:** Building intelligent decision support systems
+3. **Engineering mindset:** Translating driver feedback → quantified changes
+
+At Le Mans, Data Engineers don't just read sensors — they help Performance Engineers make split-second setup decisions during 24-hour races. This tool simulates that workflow.
 
 ## Technical References
 
-- *Le Mans Prototype Engineering* - Aerodynamics, Hybrid Systems, Data Analysis (Chapters 5, 9, 10)
-- *GT3 Race Car Engineering* - Tire management, setup optimization
-- WEC Technical Regulations 2024-2026
-- Public WEC timing data (FIA WEC Live Timing)
-
-## Why This Project
-
-This demonstrates the intersection of:
-- **Data engineering** (my CS background)
-- **Domain expertise** (WEC endurance racing systems)
-- **Strategic thinking** (optimization under constraints)
-
-As a prospective WEC Data Engineer, I need to understand:
-1. What the telemetry data represents (hybrid SOC, tire temps, fuel flow)
-2. How to analyze it (degradation patterns, efficiency metrics)
-3. Why it matters (race strategy decisions that win Le Mans)
-
-This project is my attempt to connect those dots before formal training.
+- *Le Mans Prototype Engineering* - Chapters 2, 4, 5, 9, 10
+- *GT3 Race Car Engineering* - Comparative analysis
+- WEC Hypercar Technical Regulations 2024-2026
+- Previous GT3 diagnostic tool (proven architecture)
 
 ## License
 
@@ -128,5 +189,6 @@ MIT
 
 ## Contact
 
-[Your Name] - Aspiring WEC Data Engineer  
-Applying to: MTS Data Acquisition Technician Course (November 2026)
+Alexandru Budau - Aspiring WEC Data Engineer  
+Applying to: MTS Data Acquisition Technician Course (November 2026)  
+Portfolio: WEC Telemetry Strategy Dashboard + LMP Diagnostic Assistant
